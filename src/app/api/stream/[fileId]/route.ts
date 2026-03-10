@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { driveClient } from '@/lib/google-drive';
+import { spawn } from 'child_process';
+import { PassThrough } from 'stream';
 
 export async function GET(
     request: NextRequest,
@@ -7,6 +9,8 @@ export async function GET(
 ) {
     try {
         const { fileId } = await params;
+        const { searchParams } = new URL(request.url);
+        const audioTrackIndex = searchParams.get('audioTrack');
 
         if (!fileId) {
             return new NextResponse('File ID is required', { status: 400 });
@@ -18,31 +22,78 @@ export async function GET(
             return new NextResponse('File not found', { status: 404 });
         }
 
-        // Parse range header
         const range = request.headers.get('range');
         const fileSize = parseInt(file.size || '0');
 
-        // Get the stream from Google Drive (with range if provided)
+        // If audioTrack is specified, we use ffmpeg to remux
+        if (audioTrackIndex !== null) {
+            console.log(`Streaming with audio track index: ${audioTrackIndex}`);
+
+            // For FFmpeg remuxing, we can't easily support range requests if the output format is not stable
+            // However, we can use fragmented MP4 to allow the browser to play it as a stream
+            const response = await driveClient.getFileStream(fileId);
+            const inputStream = response.data as any;
+            const outputStream = new PassThrough();
+
+            // FFmpeg command to map video and selected audio track
+            // -i pipe:0 -> read from stdin
+            // -map 0:v:0 -> first video track
+            // -map 0:a:${audioTrackIndex} -> selected audio track
+            // -c copy -> copy both codecs (no transcoding, very fast)
+            // -f mp4 -movflags frag_keyframe+empty_moov+default_base_moof -> fragmented MP4
+            // pipe:1 -> write to stdout
+            const ffmpeg = spawn('ffmpeg', [
+                '-i', 'pipe:0',
+                '-map', '0:v:0',
+                '-map', `0:${audioTrackIndex}`,
+                '-c', 'copy',
+                '-f', 'mp4',
+                '-movflags', 'frag_keyframe+empty_moov+default_base_moof',
+                'pipe:1'
+            ]);
+
+            inputStream.pipe(ffmpeg.stdin);
+
+            ffmpeg.stderr.on('data', (data) => {
+                // console.log(`ffmpeg stderr: ${data}`);
+            });
+
+            ffmpeg.on('error', (err) => {
+                console.error('ffmpeg process error:', err);
+                outputStream.end();
+            });
+
+            ffmpeg.stdout.pipe(outputStream);
+
+            const webStream = new ReadableStream({
+                async start(controller) {
+                    for await (const chunk of outputStream) {
+                        controller.enqueue(chunk);
+                    }
+                    controller.close();
+                },
+            });
+
+            return new NextResponse(webStream, {
+                headers: {
+                    'Content-Type': 'video/mp4',
+                    'Accept-Ranges': 'none', // Range requests are hard with fragmented remuxing
+                },
+            });
+        }
+
+        // Default behavior: Direct stream with range support
         const response = await driveClient.getFileStream(fileId, range || undefined);
 
         // Create headers
         const headers = new Headers();
-        headers.set('Content-Type', file.mimeType || 'application/octet-stream');
+        headers.set('Content-Type', file.mimeType || 'video/mp4');
         headers.set('Accept-Ranges', 'bytes');
-
-        // Check if we are serving partial content
-        // Note: Google Drive API returns 2xx for range requests, usually 206 if range is valid.
-        // We need to construct the Content-Range header if we want the browser to be happy.
-        // However, axios/google-drive client response might contain the headers from Google.
 
         let status = 200;
 
-        // If a range was requested and effective, we should return 206
         if (range && fileSize > 0) {
             status = 206;
-
-            // Parse the requested range to build the Content-Range header
-            // Range format: "bytes=start-end"
             const parts = range.replace(/bytes=/, "").split("-");
             const start = parseInt(parts[0], 10);
             const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
@@ -56,7 +107,6 @@ export async function GET(
             }
         }
 
-        // Create a ReadableStream from the node stream
         const iterator = response.data as any;
         const stream = new ReadableStream({
             async start(controller) {

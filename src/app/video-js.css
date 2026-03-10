@@ -1,0 +1,40 @@
+@import "video.js/dist/video-js.css";
+
+/* Video.js Custom Theme */
+.video-js {
+    width: 100%;
+    height: 100%;
+    font-family: inherit;
+}
+
+.vjs-big-play-button {
+    background-color: rgba(249, 115, 22, 0.8) !important;
+    border-radius: 50% !important;
+    width: 80px !important;
+    height: 80px !important;
+    line-height: 80px !important;
+    margin-left: -40px !important;
+    margin-top: -40px !important;
+    border: none !important;
+}
+
+.vjs-control-bar {
+    background-color: #1a1a1a !important;
+    height: 50px !important;
+}
+
+.vjs-play-progress {
+    background-color: #f97316 !important;
+}
+
+.vjs-slider {
+    background-color: #4b5563 !important;
+}
+
+.vjs-volume-level {
+    background-color: #f97316 !important;
+}
+
+.vjs-loading-spinner {
+    border: 3px solid rgba(249, 115, 22, 0.5) !important;
+}
