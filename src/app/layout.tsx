@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import WelcomeOverlay from '@/components/WelcomeOverlay';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -28,14 +29,16 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={`${inter.variable} font-sans antialiased`}>
+            <body className={`${inter.variable} font-sans antialiased min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background dark:from-slate-900/40 dark:via-background dark:to-background relative overflow-x-hidden`}>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="dark"
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <WelcomeOverlay>
+                        {children}
+                    </WelcomeOverlay>
                 </ThemeProvider>
             </body>
         </html>

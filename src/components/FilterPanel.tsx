@@ -34,12 +34,12 @@ export default function FilterPanel() {
             {/* Filter Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/40 bg-background hover:bg-accent smooth-transition"
+                className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 shadow-inner smooth-transition group"
             >
-                <Filter className="h-4 w-4" />
-                <span className="hidden sm:inline">Filters</span>
+                <Filter className="h-4 w-4 text-muted-foreground group-hover:text-primary smooth-transition" />
+                <span className="hidden sm:inline font-medium text-sm">Filters</span>
                 {filters.category && (
-                    <span className="ml-1 px-2 py-0.5 text-xs bg-primary/20 text-primary rounded-full">
+                    <span className="ml-1 px-2 py-0.5 text-[10px] font-bold bg-primary text-primary-foreground rounded-full shadow-[0_0_10px_rgba(var(--primary),0.5)]">
                         1
                     </span>
                 )}
@@ -55,15 +55,15 @@ export default function FilterPanel() {
                     />
 
                     {/* Panel */}
-                    <div className="fixed lg:absolute right-0 top-0 lg:top-full lg:mt-2 h-full lg:h-auto w-80 lg:w-96 bg-background border border-border/40 shadow-2xl lg:shadow-xl z-50 lg:rounded-lg animate-slide-in-bottom lg:animate-fade-in">
-                        <div className="flex items-center justify-between p-4 border-b border-border/40">
-                            <h3 className="font-semibold flex items-center gap-2">
-                                <Filter className="h-4 w-4" />
+                    <div className="fixed lg:absolute right-0 top-0 lg:top-full lg:mt-3 h-full lg:h-auto w-80 lg:w-96 glass-panel border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] z-50 rounded-l-3xl lg:rounded-2xl animate-slide-in-bottom lg:animate-fade-in flex flex-col">
+                        <div className="flex items-center justify-between p-5 border-b border-white/5">
+                            <h3 className="font-semibold flex items-center gap-2 text-foreground">
+                                <Filter className="h-4 w-4 text-primary" />
                                 Filters & Sort
                             </h3>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-1 hover:bg-accent rounded-lg smooth-transition"
+                                className="p-1.5 hover:bg-white/10 rounded-full smooth-transition text-muted-foreground hover:text-white"
                             >
                                 <X className="h-4 w-4" />
                             </button>
@@ -77,14 +77,13 @@ export default function FilterPanel() {
                                     {categories.map((cat) => (
                                         <button
                                             key={cat.value}
-                                            key={cat.value}
                                             onClick={() => {
                                                 setFilters({ category: cat.value });
                                                 setIsOpen(false);
                                             }}
-                                            className={`w-full text-left px-3 py-2 rounded-lg smooth-transition ${filters.category === cat.value
-                                                ? 'bg-primary/10 text-primary border border-primary/20'
-                                                : 'hover:bg-accent border border-transparent'
+                                            className={`w-full text-left px-4 py-2.5 rounded-xl text-sm smooth-transition ${filters.category === cat.value
+                                                ? 'bg-primary/20 text-primary border border-primary/30 shadow-[inset_0_0_10px_rgba(var(--primary),0.2)]'
+                                                : 'hover:bg-white/5 border border-transparent text-muted-foreground hover:text-foreground'
                                                 }`}
                                         >
                                             {cat.label}
@@ -100,14 +99,13 @@ export default function FilterPanel() {
                                     {sortOptions.map((sort) => (
                                         <button
                                             key={sort.value}
-                                            key={sort.value}
                                             onClick={() => {
                                                 setFilters({ sortBy: sort.value });
                                                 setIsOpen(false);
                                             }}
-                                            className={`w-full text-left px-3 py-2 rounded-lg smooth-transition ${filters.sortBy === sort.value
-                                                ? 'bg-primary/10 text-primary border border-primary/20'
-                                                : 'hover:bg-accent border border-transparent'
+                                            className={`w-full text-left px-4 py-2.5 rounded-xl text-sm smooth-transition ${filters.sortBy === sort.value
+                                                ? 'bg-primary/20 text-primary border border-primary/30 shadow-[inset_0_0_10px_rgba(var(--primary),0.2)]'
+                                                : 'hover:bg-white/5 border border-transparent text-muted-foreground hover:text-foreground'
                                                 }`}
                                         >
                                             {sort.label}
@@ -122,11 +120,10 @@ export default function FilterPanel() {
                                     setFilters({ category: '', sortBy: '' });
                                     setIsOpen(false);
                                 }}
-                                className="w-full px-4 py-2 bg-destructive/10 text-destructive hover:bg-destructive/20 rounded-lg smooth-transition"
+                                className="w-full px-4 py-3 bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400 font-medium rounded-xl smooth-transition border border-red-500/20"
                             >
                                 Clear All Filters
                             </button>
-                            )}
                         </div>
                     </div>
                 </>

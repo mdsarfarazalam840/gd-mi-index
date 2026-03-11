@@ -13,14 +13,14 @@ export default function ViewToggle() {
     ];
 
     return (
-        <div className="flex items-center gap-1 p-1 bg-muted/30 rounded-lg border border-border/40">
+        <div className="flex items-center gap-1 p-1 bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-inner">
             {views.map(({ mode, icon: Icon, label }) => (
                 <button
                     key={mode}
                     onClick={() => setViewMode(mode)}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm smooth-transition ${viewMode === mode
-                            ? 'bg-primary text-primary-foreground shadow-sm'
-                            : 'hover:bg-accent text-muted-foreground hover:text-foreground'
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium smooth-transition ${viewMode === mode
+                            ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.5)]'
+                            : 'hover:bg-white/10 text-muted-foreground hover:text-foreground'
                         }`}
                     aria-label={label}
                     title={label}

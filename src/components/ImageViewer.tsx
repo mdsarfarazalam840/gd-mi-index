@@ -84,24 +84,24 @@ export default function ImageViewer() {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                         <button
                             onClick={handleZoomOut}
                             disabled={zoom <= 0.5}
-                            className="p-2 text-white hover:bg-white/10 rounded-lg smooth-transition disabled:opacity-50"
+                            className="p-2.5 bg-white/10 backdrop-blur-md border border-white/10 text-white hover:bg-white/20 rounded-full smooth-transition hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
                             title="Zoom Out"
                         >
                             <ZoomOut className="h-5 w-5" />
                         </button>
 
-                        <span className="text-white text-sm min-w-[60px] text-center">
+                        <span className="text-white text-sm font-medium min-w-[60px] text-center drop-shadow-md">
                             {Math.round(zoom * 100)}%
                         </span>
 
                         <button
                             onClick={handleZoomIn}
                             disabled={zoom >= 3}
-                            className="p-2 text-white hover:bg-white/10 rounded-lg smooth-transition disabled:opacity-50"
+                            className="p-2.5 bg-white/10 backdrop-blur-md border border-white/10 text-white hover:bg-white/20 rounded-full smooth-transition hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
                             title="Zoom In"
                         >
                             <ZoomIn className="h-5 w-5" />
@@ -111,7 +111,7 @@ export default function ImageViewer() {
 
                         <button
                             onClick={handleDownload}
-                            className="p-2 text-white hover:bg-white/10 rounded-lg smooth-transition"
+                            className="p-2.5 bg-white/10 backdrop-blur-md border border-white/10 text-white hover:bg-white/20 rounded-full smooth-transition hover:scale-105 shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
                             title="Download"
                         >
                             <Download className="h-5 w-5" />
@@ -119,7 +119,7 @@ export default function ImageViewer() {
 
                         <button
                             onClick={handleClose}
-                            className="p-2 text-white hover:bg-white/10 rounded-lg smooth-transition"
+                            className="p-2.5 bg-red-500/20 backdrop-blur-md border border-red-500/30 text-white hover:bg-red-500/40 rounded-full smooth-transition hover:scale-105 shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
                             title="Close (Esc)"
                         >
                             <X className="h-5 w-5" />
@@ -154,7 +154,7 @@ export default function ImageViewer() {
                     <button
                         onClick={handlePrevious}
                         disabled={currentIndex === 0}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full smooth-transition disabled:opacity-30 disabled:cursor-not-allowed"
+                        className="absolute left-6 top-1/2 -translate-y-1/2 p-4 bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-black/60 hover:border-white/20 text-white rounded-full smooth-transition hover:scale-110 shadow-[0_0_30px_rgba(0,0,0,0.5)] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
                         title="Previous (←)"
                     >
                         <ChevronLeft className="h-6 w-6" />
@@ -163,7 +163,7 @@ export default function ImageViewer() {
                     <button
                         onClick={handleNext}
                         disabled={currentIndex === imageFiles.length - 1}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full smooth-transition disabled:opacity-30 disabled:cursor-not-allowed"
+                        className="absolute right-6 top-1/2 -translate-y-1/2 p-4 bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-black/60 hover:border-white/20 text-white rounded-full smooth-transition hover:scale-110 shadow-[0_0_30px_rgba(0,0,0,0.5)] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
                         title="Next (→)"
                     >
                         <ChevronRight className="h-6 w-6" />

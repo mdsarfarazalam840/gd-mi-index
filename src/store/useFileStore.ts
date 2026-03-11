@@ -13,8 +13,6 @@ export const useFileStore = create<FileStore>((set) => ({
     selectedFiles: [],
     nextPageToken: null,
 
-    nextPageToken: null,
-
     setFiles: (files, nextPageToken) => set({ files, nextPageToken: nextPageToken || null }),
 
     appendFiles: (newFiles, nextPageToken) =>

@@ -41,7 +41,7 @@ export async function GET(
         writeStream.end();
 
         // Wait for write to finish
-        await new Promise((resolve) => writeStream.on('finish', resolve));
+        await new Promise<void>((resolve) => writeStream.on('finish', () => resolve()));
 
         // Run ffprobe
         const { stdout } = await execPromise(

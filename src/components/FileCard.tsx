@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { Folder, Download, Eye, MoreVertical, Clock } from 'lucide-react';
 import { DriveFile } from '@/types';
 import { formatFileSize, formatRelativeDate, getFileIcon, getFileTypeColor, isFolder, isImage, isVideo } from '@/utils/fileHelpers';
@@ -12,17 +13,17 @@ interface FileCardProps {
     onPreview?: () => void;
 }
 
-export default function FileCard({ file, onClick, onDownload, onPreview }: FileCardProps) {
+export default memo(function FileCard({ file, onClick, onDownload, onPreview }: FileCardProps) {
     const canPreview = isImage(file.mimeType) || isVideo(file.mimeType);
     const showThumbnail = file.thumbnailLink && isImage(file.mimeType);
 
     return (
         <div
-            className="group relative bg-card border border-border/40 rounded-lg overflow-hidden hover:border-primary/50 hover:shadow-lg card-hover cursor-pointer"
+            className="group relative glass-panel rounded-xl overflow-hidden hover:border-primary/30 card-hover cursor-pointer"
             onClick={onClick}
         >
             {/* Thumbnail/Icon */}
-            <div className="relative aspect-video bg-muted/30 flex items-center justify-center overflow-hidden">
+            <div className="relative aspect-video bg-white/[0.02] group-hover:bg-white/[0.04] smooth-transition flex items-center justify-center overflow-hidden">
                 {showThumbnail ? (
                     <Image
                         src={file.thumbnailLink!}
@@ -39,14 +40,14 @@ export default function FileCard({ file, onClick, onDownload, onPreview }: FileC
                 )}
 
                 {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 smooth-transition flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] group-hover:bg-black/40 smooth-transition flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
                     {canPreview && onPreview && (
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onPreview();
                             }}
-                            className="p-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg smooth-transition"
+                            className="p-2.5 bg-primary/80 hover:bg-primary text-primary-foreground rounded-full smooth-transition hover:scale-110 shadow-[0_0_15px_rgba(var(--primary),0.5)]"
                             title="Preview"
                         >
                             <Eye className="h-4 w-4" />
@@ -59,7 +60,7 @@ export default function FileCard({ file, onClick, onDownload, onPreview }: FileC
                                 e.stopPropagation();
                                 onDownload();
                             }}
-                            className="p-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg smooth-transition"
+                            className="p-2.5 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md rounded-full smooth-transition hover:scale-110 border border-white/10"
                             title="Download"
                         >
                             <Download className="h-4 w-4" />
@@ -69,9 +70,9 @@ export default function FileCard({ file, onClick, onDownload, onPreview }: FileC
             </div>
 
             {/* File Info */}
-            <div className="p-3 space-y-2">
+            <div className="p-4 space-y-3">
                 <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-sm font-medium truncate flex-1" title={file.name}>
+                    <h3 className="text-sm font-medium truncate flex-1 group-hover:text-primary smooth-transition" title={file.name}>
                         {file.name}
                     </h3>
                     <button
@@ -103,4 +104,4 @@ export default function FileCard({ file, onClick, onDownload, onPreview }: FileC
             </div>
         </div>
     );
-}
+});

@@ -4,6 +4,7 @@ import { X, Download, Maximize, Minimize, Music } from 'lucide-react';
 import { useUIStore } from '@/store/useUIStore';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import videojs from 'video.js';
+// @ts-ignore
 import Player from 'video.js/dist/video-js';
 import '@/app/video-js.css';
 
@@ -145,7 +146,10 @@ export default function VideoPlayer() {
 
         player.on('timeupdate', () => {
             if (currentMediaFile) {
-                localStorage.setItem(`vid_progress_${currentMediaFile.id}`, player.currentTime().toString());
+                const time = player.currentTime();
+                if (time !== undefined) {
+                    localStorage.setItem(`vid_progress_${currentMediaFile.id}`, time.toString());
+                }
             }
         });
 
@@ -199,17 +203,17 @@ export default function VideoPlayer() {
             className="fixed inset-0 z-[100] bg-black text-white flex flex-col overflow-hidden"
         >
             {/* Header */}
-            <div className="absolute top-0 left-0 right-0 z-[110] bg-gradient-to-b from-black/90 to-transparent p-4 flex items-center justify-between pointer-events-none">
+            <div className="absolute top-0 left-0 right-0 z-[110] bg-gradient-to-b from-black/80 to-transparent p-6 flex items-center justify-between pointer-events-none transition-opacity duration-300">
                 <div className="flex items-center gap-3 pointer-events-auto">
-                    <h3 className="font-medium truncate max-w-[500px] drop-shadow-md">{currentMediaFile.name}</h3>
+                    <h3 className="font-medium truncate max-w-[500px] drop-shadow-md text-lg">{currentMediaFile.name}</h3>
                 </div>
-                <div className="flex items-center gap-2 pointer-events-auto">
+                <div className="flex items-center gap-3 pointer-events-auto">
                     {/* Audio Track Selector */}
                     {tracks?.audio && tracks.audio.length > 1 && (
                         <div className="relative" ref={audioMenuRef}>
                             <button
                                 onClick={() => setShowAudioMenu(!showAudioMenu)}
-                                className={`p-2 hover:bg-white/10 rounded-full transition-colors ${showAudioMenu ? 'text-orange-500 bg-white/10' : ''}`}
+                                className={`p-2.5 backdrop-blur-md rounded-full transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] border ${showAudioMenu ? 'text-primary bg-white/20 border-primary/50' : 'bg-white/10 hover:bg-white/20 border-white/10 text-white hover:scale-105'}`}
                                 title="Audio Tracks"
                             >
                                 <Music className="h-5 w-5" />
@@ -240,17 +244,17 @@ export default function VideoPlayer() {
                         </div>
                     )}
 
-                    <button onClick={handleDownload} className="p-2 hover:bg-white/10 rounded-full" title="Download">
+                    <button onClick={handleDownload} className="p-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-white rounded-full transition-all duration-300 hover:scale-105 shadow-[0_4px_20px_rgba(0,0,0,0.5)]" title="Download">
                         <Download className="h-5 w-5" />
                     </button>
                     <button
                         onClick={() => setAspectRatio(prev => prev === 'contain' ? 'cover' : 'contain')}
-                        className="p-2 hover:bg-white/10 rounded-full"
+                        className="p-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-white rounded-full transition-all duration-300 hover:scale-105 shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                         title="Toggle Aspect Ratio"
                     >
                         {aspectRatio === 'contain' ? <Minimize className="h-5 w-5" /> : <Maximize className="h-5 w-5" />}
                     </button>
-                    <button onClick={handleClose} className="p-2 hover:bg-white/10 rounded-full" title="Close (Esc)">
+                    <button onClick={handleClose} className="p-2.5 bg-red-500/20 hover:bg-red-500/40 backdrop-blur-md border border-red-500/30 text-white rounded-full transition-all duration-300 hover:scale-105 shadow-[0_4px_20px_rgba(0,0,0,0.5)]" title="Close (Esc)">
                         <X className="h-5 w-5" />
                     </button>
                 </div>

@@ -7,6 +7,7 @@ interface TMDBMovie {
     id: number;
     title: string;
     poster_path: string | null;
+    backdrop_path: string | null;
     release_date: string;
     overview: string;
 }
@@ -14,7 +15,7 @@ interface TMDBMovie {
 export async function searchMovieMetadata(filename: string): Promise<{ posterUrl: string | null, backdropUrl: string | null, title: string | null, overview: string | null }> {
     if (!TMDB_API_KEY) {
         console.warn('TMDB_API_KEY is not set');
-        return { posterUrl: null, title: null, overview: null };
+        return { posterUrl: null, backdropUrl: null, title: null, overview: null };
     }
 
     try {

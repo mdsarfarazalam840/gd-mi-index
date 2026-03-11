@@ -10,10 +10,12 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@tanstack/react-virtual": "^3.13.21",
         "@types/video.js": "^7.3.58",
         "axios": "^1.6.8",
         "clsx": "^2.1.0",
         "date-fns": "^3.6.0",
+        "framer-motion": "^12.35.2",
         "googleapis": "^169.0.0",
         "lucide-react": "^0.344.0",
         "next": "15.1.0",
